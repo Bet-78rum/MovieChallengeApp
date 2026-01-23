@@ -3,7 +3,7 @@
 MovieChallengeApp, The Movie Database (TMDB) API kullanılarak geliştirilmiş bir Android film keşif uygulamasıdır.  
 Bu proje, bir mobil geliştirme challenge’ı kapsamında hazırlanmış olup modern Android geliştirme yaklaşımlarını göstermeyi amaçlamaktadır.
 
-Uygulama Jetpack Compose ile geliştirilmiş ve MVVM mimarisi kullanılmıştır.
+Uygulama Jetpack Compose ile geliştirilmiş.
 
 ---
 
@@ -38,7 +38,6 @@ Uygulama Jetpack Compose ile geliştirilmiş ve MVVM mimarisi kullanılmıştır
 - Retrofit
 - Coil
 - Material / Material3
-- MVVM Architecture
 - TMDB API
 
 ---

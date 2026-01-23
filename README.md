@@ -1,7 +1,7 @@
 # MovieChallengeApp 🎬
 
-Bu proje, The Movie Database (TMDB) API kullanılarak geliştirilmiş bir Android film keşif uygulamasıdır.  
-Uygulama, REST API entegrasyonu, modern UI ve MVVM mimarisi kullanılarak hazırlanmıştır.
+MovieChallengeApp, The Movie Database (TMDB) API kullanılarak geliştirilmiş bir Android film keşif uygulamasıdır.  
+Uygulama, modern Android geliştirme yaklaşımlarıyla (Jetpack Compose & MVVM) hazırlanmıştır.
 
 ## 📱 Uygulama Özellikleri
 - Ana sayfada film kategorileri:
@@ -9,11 +9,11 @@ Uygulama, REST API entegrasyonu, modern UI ve MVVM mimarisi kullanılarak hazır
   - Popular
   - Top Rated
   - Upcoming
-- “Tümünü Göster” ekranı
-- Film detay sayfası
+- “Tümünü Göster” ekranı ile kategori bazlı listeleme
+- Film detay sayfası (isim, açıklama, puan, tarih vb.)
 - Film adına göre arama
 - İnternet bağlantısı olmadığında kullanıcı bilgilendirme
-- Alt menü:
+- Alt navigasyon:
   - Ana Sayfa
   - Arama
 

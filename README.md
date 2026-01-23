@@ -1,30 +1,33 @@
 # MovieChallengeApp 🎬
 
-Bu proje, Android (Jetpack Compose) kullanılarak geliştirilmiş bir film uygulamasıdır.
+Bu proje, The Movie Database (TMDB) API kullanılarak geliştirilmiş bir Android film keşif uygulamasıdır.  
+Uygulama, REST API entegrasyonu, modern UI ve MVVM mimarisi kullanılarak hazırlanmıştır.
 
 ## 📱 Uygulama Özellikleri
-- Ana sayfada film kategorileri
+- Ana sayfada film kategorileri:
   - Now Playing
   - Popular
   - Top Rated
   - Upcoming
-- “Show All” ekranı ile tüm filmleri listeleme
-- Film detay ekranı
-- İnternet bağlantısı yokken kullanıcıya uyarı gösterme
-- Alt menüde:
-  - Ana sayfa (Home)
-  - Arama (Search)
+- “Tümünü Göster” ekranı
+- Film detay sayfası
+- Film adına göre arama
+- İnternet bağlantısı olmadığında kullanıcı bilgilendirme
+- Alt menü:
+  - Ana Sayfa
+  - Arama
 
 ## 🛠 Kullanılan Teknolojiler
-- **Kotlin**
-- **Jetpack Compose**
-- **Retrofit** (API istekleri için)
-- **Coil** (film afişleri için)
-- **Material / Material3**
-- **TMDB API**
+- Kotlin
+- Jetpack Compose
+- Retrofit
+- Coil
+- Material / Material3
+- MVVM Architecture
+- TMDB API
 
-## 🔗 API
-Veriler, The Movie Database (TMDB) API üzerinden alınmaktadır.
+## ⚙️ Kurulum ve Çalıştırma
 
-## 👤 Geliştirici
-- İsim: Betül Mermer
+1. Projeyi klonlayın:
+```bash
+git clone https://github.com/Bet-78rum/MovieChallengeApp.git

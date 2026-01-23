@@ -19,7 +19,6 @@ Uygulama Jetpack Compose ile geliştirilmiş ve MVVM mimarisi kullanılmıştır
 - Film detay sayfasında:
   - Film adı
   - Açıklama
-  - Yayın tarihi
   - Puan bilgisi
 
 - Film adına göre arama yapılabilir

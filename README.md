@@ -26,8 +26,5 @@ Bu proje, Android (Jetpack Compose) kullanılarak geliştirilmiş bir film uygul
 ## 🔗 API
 Veriler, The Movie Database (TMDB) API üzerinden alınmaktadır.
 
-## 📸 Uygulama Görselleri
-> (İsteğe bağlı olarak ekran görüntüleri veya video eklenebilir)
-
 ## 👤 Geliştirici
-- İsim: *(buraya adını yazabilirsin)*
+- İsim: Betül Mermer

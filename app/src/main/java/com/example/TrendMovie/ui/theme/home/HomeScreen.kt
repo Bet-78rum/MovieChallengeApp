@@ -7,9 +7,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -34,6 +36,7 @@ fun HomeScreen(
     onMovieClick: (Movie) -> Unit,
     onShowAllClick: (String) -> Unit,
     onHomeClick: () -> Unit,
+    onFavoritesClick: () -> Unit,
     isDarkMode: Boolean,
     onToggleDarkMode: () -> Unit
 ) {
@@ -49,7 +52,7 @@ fun HomeScreen(
 
     val nowPlaying = remember { mutableStateOf<List<Movie>>(emptyList()) }
     val popular = remember { mutableStateOf<List<Movie>>(emptyList()) }
-    val topRated = remember { mutableStateOf<List<Movie>>(emptyList()) }
+    val topRated = remember { mutableStateOf<List<Movie>>(emptyOf()) }
     val upcoming = remember { mutableStateOf<List<Movie>>(emptyList()) }
 
     var searchQuery by remember { mutableStateOf("") }
@@ -86,6 +89,9 @@ fun HomeScreen(
                 actions = {
                     IconButton(onClick = { isSearching = !isSearching }) {
                         Icon(Icons.Filled.Search, contentDescription = "Search")
+                    }
+                    IconButton(onClick = onFavoritesClick) {
+                        Icon(Icons.Filled.Favorite, contentDescription = "Favorites", tint = MaterialTheme.colorScheme.primary)
                     }
                     IconButton(onClick = onHomeClick) {
                         Icon(Icons.Filled.Home, contentDescription = "Home Page")
@@ -132,3 +138,5 @@ fun HomeScreen(
         }
     }
 }
+
+private fun <T> emptyOf(): List<T> = emptyList()

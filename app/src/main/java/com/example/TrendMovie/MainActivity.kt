@@ -1,4 +1,4 @@
-package com.example.moviechallengeapp
+package com.betul.TrendMovie
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -17,9 +17,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.example.moviechallengeapp.api.RetrofitInstance
-import com.example.moviechallengeapp.model.Movie
-import com.example.moviechallengeapp.ui.theme.MovieChallengeAppTheme
+import com.betul.TrendMovie.api.RetrofitInstance
+import com.betul.TrendMovie.model.Movie
+import com.betul.TrendMovie.ui.theme.TrendMovieTheme
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -31,15 +31,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.material3.Divider
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.delay
-
-
-
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,7 +43,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             var isDarkMode by remember { mutableStateOf(false) }
-            MovieChallengeAppTheme(darkTheme = isDarkMode) {
+            TrendMovieTheme(darkTheme = isDarkMode) {
                 Surface(color = MaterialTheme.colorScheme.background) {
                     var showMovies by remember { mutableStateOf(false) }
                     var selectedCategory by remember { mutableStateOf<String?>(null) }
@@ -87,6 +83,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 @Composable
 fun Greeting(onClick: () -> Unit) {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -95,6 +92,7 @@ fun Greeting(onClick: () -> Unit) {
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
@@ -110,7 +108,7 @@ fun HomeScreen(
     LaunchedEffect(Unit) {
         while (true) {
             isConnected = isInternetAvailable(context)
-            delay(2000) // 2 saniyede bir kontrol
+            delay(2000)
         }
     }
 
@@ -147,7 +145,7 @@ fun HomeScreen(
                             modifier = Modifier.fillMaxWidth()
                         )
                     } else {
-                        Text("Filmler")
+                        Text("Trend Movie")
                     }
                 },
                 actions = {
@@ -166,36 +164,40 @@ fun HomeScreen(
             )
         }
     ) { innerPadding ->
-        LazyColumn(modifier = Modifier.padding(innerPadding)) {
-            item {
-                CategorySection(
-                    title = "Now Playing",
-                    movies = nowPlaying.value.filter { it.title.contains(searchQuery, true) },
-                    onMovieClick = onMovieClick,
-                    onShowAllClick = { onShowAllClick("now_playing") }
-                )
-                CategorySection(
-                    title = "Popular",
-                    movies = popular.value.filter { it.title.contains(searchQuery, true) },
-                    onMovieClick = onMovieClick,
-                    onShowAllClick = { onShowAllClick("popular") }
-                )
-                CategorySection(
-                    title = "Top Rated",
-                    movies = topRated.value.filter { it.title.contains(searchQuery, true) },
-                    onMovieClick = onMovieClick,
-                    onShowAllClick = { onShowAllClick("top_rated") }
-                )
-                CategorySection(
-                    title = "Upcoming",
-                    movies = upcoming.value.filter { it.title.contains(searchQuery, true) },
-                    onMovieClick = onMovieClick,
-                    onShowAllClick = { onShowAllClick("upcoming") }
-                )
+        Column(modifier = Modifier.padding(innerPadding)) {
+            NoInternetWarning(isConnected)
+            LazyColumn {
+                item {
+                    CategorySection(
+                        title = "Vizyondakiler",
+                        movies = nowPlaying.value.filter { it.title.contains(searchQuery, true) },
+                        onMovieClick = onMovieClick,
+                        onShowAllClick = { onShowAllClick("now_playing") }
+                    )
+                    CategorySection(
+                        title = "Popüler",
+                        movies = popular.value.filter { it.title.contains(searchQuery, true) },
+                        onMovieClick = onMovieClick,
+                        onShowAllClick = { onShowAllClick("popular") }
+                    )
+                    CategorySection(
+                        title = "En Çok Oylananlar",
+                        movies = topRated.value.filter { it.title.contains(searchQuery, true) },
+                        onMovieClick = onMovieClick,
+                        onShowAllClick = { onShowAllClick("top_rated") }
+                    )
+                    CategorySection(
+                        title = "Yakında",
+                        movies = upcoming.value.filter { it.title.contains(searchQuery, true) },
+                        onMovieClick = onMovieClick,
+                        onShowAllClick = { onShowAllClick("upcoming") }
+                    )
+                }
             }
         }
     }
 }
+
 @Composable
 fun MovieDetailScreen(movie: Movie, onClose: () -> Unit) {
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
@@ -215,14 +217,20 @@ fun MovieDetailScreen(movie: Movie, onClose: () -> Unit) {
         Text(text = movie.overview)
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShowAllScreen(category: String, onMovieClick: (Movie) -> Unit, onBack: () -> Unit) {
     val context = LocalContext.current
-    val isConnected = remember {
-        isInternetAvailable(context)
+    var isConnected by remember { mutableStateOf(true) }
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            isConnected = isInternetAvailable(context)
+            delay(2000)
+        }
     }
-    NoInternetWarning(isConnected)
+
     val movies = remember { mutableStateOf<List<Movie>>(emptyList()) }
     val apiKey = "3718ca57be56d9dae8c1ec94fde249db"
 
@@ -238,12 +246,21 @@ fun ShowAllScreen(category: String, onMovieClick: (Movie) -> Unit, onBack: () ->
             movies.value = response?.results ?: emptyList()
         } catch (e: Exception) { e.printStackTrace() }
     }
-    NoInternetWarning(isConnected)
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(category.replace("_", " ").uppercase()) },
+                title = { 
+                    Text(
+                        text = when(category) {
+                            "now_playing" -> "Vizyondakiler"
+                            "popular" -> "Popüler"
+                            "top_rated" -> "En Çok Oylananlar"
+                            "upcoming" -> "Yakında"
+                            else -> category.replace("_", " ").uppercase()
+                        }
+                    )
+                },
                 navigationIcon = {
                     Button(onClick = onBack, modifier = Modifier.padding(horizontal = 8.dp)) {
                         Text("Geri")
@@ -251,48 +268,50 @@ fun ShowAllScreen(category: String, onMovieClick: (Movie) -> Unit, onBack: () ->
                 }
             )
         }
-    )
-
-    { padding ->
-        LazyColumn(modifier = Modifier.padding(padding).fillMaxSize()) {
-            items(movies.value) { movie ->
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { onMovieClick(movie) }
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Card(
-                        shape = RoundedCornerShape(8.dp),
-                        modifier = Modifier.size(width = 60.dp, height = 90.dp)
+    ) { padding ->
+        Column(modifier = Modifier.padding(padding)) {
+            NoInternetWarning(isConnected)
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                items(movies.value) { movie ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onMovieClick(movie) }
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        AsyncImage(
-                            model = "https://image.tmdb.org/t/p/w200${movie.poster_path}",
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop
-                        )
-                    }
+                        Card(
+                            shape = RoundedCornerShape(8.dp),
+                            modifier = Modifier.size(width = 60.dp, height = 90.dp)
+                        ) {
+                            AsyncImage(
+                                model = "https://image.tmdb.org/t/p/w200${movie.poster_path}",
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop
+                            )
+                        }
 
-                    Spacer(modifier = Modifier.width(16.dp))
+                        Spacer(modifier = Modifier.width(16.dp))
 
-                    Column {
-                        Text(
-                            text = movie.title,
-                            style = MaterialTheme.typography.titleMedium,
-                            maxLines = 1
-                        )
-                        Text(
-                            text = "Puan: ⭐ ${movie.vote_average}",
-                            style = MaterialTheme.typography.bodySmall
-                        )
+                        Column {
+                            Text(
+                                text = movie.title,
+                                style = MaterialTheme.typography.titleMedium,
+                                maxLines = 1
+                            )
+                            Text(
+                                text = "Puan: ⭐ ${movie.vote_average}",
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
                     }
+                    HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp), thickness = 0.5.dp)
                 }
-                Divider(modifier = Modifier.padding(horizontal = 16.dp), thickness = 0.5.dp)
             }
         }
     }
 }
+
 @Composable
 fun CategorySection(title: String, movies: List<Movie>, onMovieClick: (Movie) -> Unit, onShowAllClick: () -> Unit) {
     Column(modifier = Modifier.padding(vertical = 8.dp)) {
@@ -317,6 +336,7 @@ fun MovieItem(movie: Movie, onClick: (Movie) -> Unit) {
         Text(text = movie.title, maxLines = 1, modifier = Modifier.padding(top = 4.dp))
     }
 }
+
 fun isInternetAvailable(context: Context): Boolean {
     val connectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -326,6 +346,7 @@ fun isInternetAvailable(context: Context): Boolean {
 
     return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
 }
+
 @Composable
 fun NoInternetWarning(isConnected: Boolean) {
     if (!isConnected) {
@@ -347,6 +368,3 @@ fun NoInternetWarning(isConnected: Boolean) {
         }
     }
 }
-
-
-

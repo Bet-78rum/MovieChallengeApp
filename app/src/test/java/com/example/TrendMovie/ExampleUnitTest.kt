@@ -1,4 +1,4 @@
-package com.example.moviechallengeapp
+package com.betul.TrendMovie
 
 import org.junit.Test
 

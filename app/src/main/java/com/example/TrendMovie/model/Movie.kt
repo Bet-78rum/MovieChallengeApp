@@ -1,4 +1,4 @@
-package com.example.moviechallengeapp.model
+package com.betul.TrendMovie.model
 
 data class Movie(
     val id: Int,

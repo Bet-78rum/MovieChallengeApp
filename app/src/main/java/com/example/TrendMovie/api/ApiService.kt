@@ -1,6 +1,6 @@
-package com.example.moviechallengeapp.api
+package com.betul.TrendMovie.api
 
-import com.example.moviechallengeapp.model.MovieResponse
+import com.betul.TrendMovie.model.MovieResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

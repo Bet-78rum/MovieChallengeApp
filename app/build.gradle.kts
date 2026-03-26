@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.moviechallengeapp"
+    namespace = "com.betul.TrendMovie"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.moviechallengeapp"
+        applicationId = "com.betul.TrendMovie"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

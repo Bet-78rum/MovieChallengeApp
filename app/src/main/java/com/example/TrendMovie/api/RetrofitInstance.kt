@@ -1,4 +1,4 @@
-package com.example.moviechallengeapp.api
+package com.betul.TrendMovie.api
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

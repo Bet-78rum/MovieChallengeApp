@@ -1,4 +1,4 @@
-package com.example.moviechallengeapp.ui.theme
+package com.betul.TrendMovie.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

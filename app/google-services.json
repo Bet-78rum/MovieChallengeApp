@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "293759404995",
+    "project_id": "trend-movie-70e20",
+    "storage_bucket": "trend-movie-70e20.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:293759404995:android:b9f6bf6a3286e7251d0b76",
+        "android_client_info": {
+          "package_name": "com.example.TrendMovie"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCelJNJ9yM_Sym4FtQyTyEKbCMSTYxTtIw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -2,14 +2,15 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("com.google.gms.google-services") version "4.4.4" apply false
 }
 
 android {
-    namespace = "com.betul.TrendMovie"
+    namespace = "com.ali.TrendMovie"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.betul.TrendMovie"
+        applicationId = "com.ali.TrendMovie"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -64,6 +65,12 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
         implementation("androidx.compose.material3:material3:1.2.0")
+    implementation(platform("com.google.firebase:firebase-bom:33.9.0"))
 
+    // Firebase Analytics (Uygulamanın kaç kişi tarafından kullanıldığını görmek için)
+    implementation("com.google.firebase:firebase-analytics")
+
+    // Eğer veritabanı (Realtime Database) kullanacaksan bunu da ekle:
+    implementation("com.google.firebase:firebase-database")
 
 }

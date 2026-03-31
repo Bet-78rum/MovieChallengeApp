@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.ali.TrendMovie.model.Movie
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 
@@ -28,6 +29,15 @@ fun MovieDetailScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // "Close" yazısı yerine Geri Oku (Back Arrow) ikonu
+            IconButton(onClick = onClose) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Back"
+                )
+            }
+
+            // Kalp (Favori) butonu
             IconButton(onClick = onToggleFavorite) {
                 Icon(
                     imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
@@ -35,19 +45,15 @@ fun MovieDetailScreen(
                     tint = if (isFavorite) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
                 )
             }
-            IconButton(onClick = onClose) {
-                Text("Close", color = MaterialTheme.colorScheme.primary)
-            }
         }
         
-        // Fotoğrafın köşelerini 24.dp yaparak daha oval hale getirdim
         AsyncImage(
             model = "https://image.tmdb.org/t/p/original${movie.poster_path}",
             contentDescription = movie.title,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(450.dp) // Biraz daha büyük ve belirgin yaptım
-                .clip(RoundedCornerShape(24.dp)), // İşte aradığın oval köşeler burada
+                .height(450.dp)
+                .clip(RoundedCornerShape(24.dp)),
             contentScale = ContentScale.Crop
         )
         

@@ -20,9 +20,15 @@ import com.ali.TrendMovie.model.Movie
 
 @Composable
 fun MovieItem(movie: Movie, onClick: (Movie) -> Unit) {
+    // Önceki dikey (Column) yapıya geri döndük
     Column(modifier = Modifier.width(150.dp).padding(8.dp).clickable { onClick(movie) }) {
         Card(shape = RoundedCornerShape(8.dp)) {
-            AsyncImage(model = "https://image.tmdb.org/t/p/w500${movie.poster_path}", contentDescription = null, modifier = Modifier.height(200.dp), contentScale = ContentScale.Crop)
+            AsyncImage(
+                model = "https://image.tmdb.org/t/p/w500${movie.poster_path}", 
+                contentDescription = null, 
+                modifier = Modifier.height(200.dp), 
+                contentScale = ContentScale.Crop
+            )
         }
         Text(text = movie.title, maxLines = 1, modifier = Modifier.padding(top = 4.dp))
     }

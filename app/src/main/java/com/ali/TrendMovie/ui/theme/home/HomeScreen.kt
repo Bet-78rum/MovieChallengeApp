@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -93,9 +92,7 @@ fun HomeScreen(
                     IconButton(onClick = onFavoritesClick) {
                         Icon(Icons.Filled.Favorite, contentDescription = "Favorites", tint = MaterialTheme.colorScheme.primary)
                     }
-                    IconButton(onClick = onHomeClick) {
-                        Icon(Icons.Filled.Home, contentDescription = "Home Page")
-                    }
+                    // Ev simgesi kaldırıldı
                     Switch(
                         checked = isDarkMode,
                         onCheckedChange = { onToggleDarkMode() },

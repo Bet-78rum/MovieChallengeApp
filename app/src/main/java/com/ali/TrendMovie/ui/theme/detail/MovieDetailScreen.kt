@@ -1,10 +1,12 @@
 package com.ali.TrendMovie
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -37,16 +39,22 @@ fun MovieDetailScreen(
                 Text("Close", color = MaterialTheme.colorScheme.primary)
             }
         }
+        
+        // Fotoğrafın köşelerini 24.dp yaparak daha oval hale getirdim
         AsyncImage(
             model = "https://image.tmdb.org/t/p/original${movie.poster_path}",
             contentDescription = movie.title,
-            modifier = Modifier.fillMaxWidth().height(350.dp),
-            contentScale = ContentScale.Fit
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(450.dp) // Biraz daha büyük ve belirgin yaptım
+                .clip(RoundedCornerShape(24.dp)), // İşte aradığın oval köşeler burada
+            contentScale = ContentScale.Crop
         )
+        
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = movie.title, style = MaterialTheme.typography.headlineMedium)
-        Text(text = "Score: ⭐ ${movie.vote_average}")
+        Text(text = "Score: ⭐ ${movie.vote_average}", style = MaterialTheme.typography.titleMedium)
         Spacer(modifier = Modifier.height(8.dp))
-        Text(text = movie.overview)
+        Text(text = movie.overview, style = MaterialTheme.typography.bodyLarge)
     }
 }

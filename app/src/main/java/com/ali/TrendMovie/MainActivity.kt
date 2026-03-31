@@ -15,8 +15,23 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.navigation3.runtime.NavEntry
+import androidx.navigation3.ui.NavDisplay
 import com.ali.TrendMovie.model.Movie
+
+// Ekranların importları - Eğer hata alırsan bu yolları kontrol etmelisin
+// Not: Tüm dosyaların 'package com.ali.TrendMovie' olarak tanımlandığını varsayıyorum.
+
 import com.ali.TrendMovie.ui.theme.TrendMovieTheme
+
+// Navigation 3 için anahtar (route) tanımları
+sealed interface NavKey {
+    data object Greeting : NavKey
+    data object Home : NavKey
+    data class MovieDetail(val movie: Movie) : NavKey
+    data class ShowAll(val category: String) : NavKey
+    data object Favorites : NavKey
+}
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,74 +43,84 @@ class MainActivity : ComponentActivity() {
 
             TrendMovieTheme(darkTheme = isDarkMode) {
                 Surface(color = MaterialTheme.colorScheme.background) {
-                    var currentScreen by remember { mutableStateOf("greeting") }
-                    var selectedCategory by remember { mutableStateOf<String?>(null) }
-                    var selectedMovie by remember { mutableStateOf<Movie?>(null) }
+                    
+                    // Navigation 3 Back Stack (Liste tabanlı)
+                    val backStack = remember { mutableStateListOf<NavKey>(NavKey.Greeting) }
 
                     Box(modifier = Modifier.fillMaxSize().statusBarsPadding()) {
-                        when (currentScreen) {
-                            "detail" -> {
-                                selectedMovie?.let { movie ->
-                                    MovieDetailScreen(
-                                        movie = movie,
-                                        isFavorite = favoriteMovies.any { it.id == movie.id },
-                                        onToggleFavorite = {
-                                            if (favoriteMovies.any { it.id == movie.id }) {
-                                                favoriteMovies.removeAll { it.id == movie.id }
-                                            } else {
-                                                favoriteMovies.add(movie)
-                                            }
-                                        },
-                                        onClose = { currentScreen = "home" }
-                                    )
+                        NavDisplay(
+                            backStack = backStack,
+                            onBack = { 
+                                if (backStack.size > 1) {
+                                    backStack.removeAt(backStack.size - 1)
+                                } else {
+                                    finish()
+                                }
+                            },
+                            entryProvider = { key ->
+                                when (key) {
+                                    is NavKey.Greeting -> NavEntry(key) {
+                                        Greeting(onClick = { 
+                                            backStack.add(NavKey.Home) 
+                                        })
+                                    }
+                                    is NavKey.Home -> NavEntry(key) {
+                                        HomeScreen(
+                                            onMovieClick = { movie -> 
+                                                backStack.add(NavKey.MovieDetail(movie)) 
+                                            },
+                                            onShowAllClick = { category -> 
+                                                backStack.add(NavKey.ShowAll(category)) 
+                                            },
+                                            onHomeClick = { 
+                                                if (backStack.isNotEmpty() && backStack.last() !is NavKey.Greeting) {
+                                                    backStack.clear()
+                                                    backStack.add(NavKey.Greeting)
+                                                }
+                                            },
+                                            onFavoritesClick = { 
+                                                backStack.add(NavKey.Favorites) 
+                                            },
+                                            isDarkMode = isDarkMode,
+                                            onToggleDarkMode = { isDarkMode = !isDarkMode }
+                                        )
+                                    }
+                                    is NavKey.MovieDetail -> NavEntry(key) {
+                                        val movie = key.movie
+                                        MovieDetailScreen(
+                                            movie = movie,
+                                            isFavorite = favoriteMovies.any { it.id == movie.id },
+                                            onToggleFavorite = {
+                                                if (favoriteMovies.any { it.id == movie.id }) {
+                                                    favoriteMovies.removeAll { it.id == movie.id }
+                                                } else {
+                                                    favoriteMovies.add(movie)
+                                                }
+                                            },
+                                            onClose = { backStack.removeAt(backStack.size - 1) }
+                                        )
+                                    }
+                                    is NavKey.ShowAll -> NavEntry(key) {
+                                        ShowAllScreen(
+                                            category = key.category,
+                                            onMovieClick = { movie -> 
+                                                backStack.add(NavKey.MovieDetail(movie)) 
+                                            },
+                                            onBack = { backStack.removeAt(backStack.size - 1) }
+                                        )
+                                    }
+                                    is NavKey.Favorites -> NavEntry(key) {
+                                        FavoritesScreen(
+                                            movies = favoriteMovies,
+                                            onMovieClick = { movie -> 
+                                                backStack.add(NavKey.MovieDetail(movie)) 
+                                            },
+                                            onBack = { backStack.removeAt(backStack.size - 1) }
+                                        )
+                                    }
                                 }
                             }
-
-                            "category" -> {
-                                selectedCategory?.let { category ->
-                                    ShowAllScreen(
-                                        category = category,
-                                        onMovieClick = { movie ->
-                                            selectedMovie = movie
-                                            currentScreen = "detail"
-                                        },
-                                        onBack = { currentScreen = "home" }
-                                    )
-                                }
-                            }
-
-                            "favorites" -> {
-                                FavoritesScreen(
-                                    movies = favoriteMovies,
-                                    onMovieClick = { movie ->
-                                        selectedMovie = movie
-                                        currentScreen = "detail"
-                                    },
-                                    onBack = { currentScreen = "home" }
-                                )
-                            }
-
-                            "home" -> {
-                                HomeScreen(
-                                    onMovieClick = { movie ->
-                                        selectedMovie = movie
-                                        currentScreen = "detail"
-                                    },
-                                    onShowAllClick = { category ->
-                                        selectedCategory = category
-                                        currentScreen = "category"
-                                    },
-                                    onHomeClick = { currentScreen = "greeting" },
-                                    onFavoritesClick = { currentScreen = "favorites" },
-                                    isDarkMode = isDarkMode,
-                                    onToggleDarkMode = { isDarkMode = !isDarkMode }
-                                )
-                            }
-
-                            else -> {
-                                Greeting(onClick = { currentScreen = "home" })
-                            }
-                        }
+                        )
                     }
                 }
             }

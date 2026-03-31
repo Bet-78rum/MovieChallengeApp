@@ -2,17 +2,16 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("com.google.gms.google-services") version "4.4.4" apply false
 }
 
 android {
     namespace = "com.ali.TrendMovie"
-    compileSdk = 34
+    compileSdk = 36 // Navigation 3 ve yeni Compose kütüphaneleri için 36 gerekli
 
     defaultConfig {
         applicationId = "com.ali.TrendMovie"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -53,6 +52,11 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     implementation("androidx.compose.material:material-icons-extended:1.6.0")
+    
+    // Navigation 3
+    implementation(libs.androidx.navigation3.ui)
+    implementation(libs.androidx.navigation3.runtime)
+
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
     implementation(libs.coroutines.android)
@@ -64,13 +68,7 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
-        implementation("androidx.compose.material3:material3:1.2.0")
     implementation(platform("com.google.firebase:firebase-bom:33.9.0"))
-
-    // Firebase Analytics (Uygulamanın kaç kişi tarafından kullanıldığını görmek için)
     implementation("com.google.firebase:firebase-analytics")
-
-    // Eğer veritabanı (Realtime Database) kullanacaksan bunu da ekle:
     implementation("com.google.firebase:firebase-database")
-
 }

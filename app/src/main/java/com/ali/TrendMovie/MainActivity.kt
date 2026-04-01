@@ -38,6 +38,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             var isDarkMode by remember { mutableStateOf(false) }
+            var isTurkish by remember { mutableStateOf(false) } // Dil durumu
             val favoriteMovies = remember { mutableStateListOf<Movie>() }
 
             TrendMovieTheme(darkTheme = isDarkMode) {
@@ -45,7 +46,6 @@ class MainActivity : ComponentActivity() {
                     
                     val backStack = remember { mutableStateListOf<NavKey>(NavKey.Greeting) }
 
-                    // Box içine 'navigationBarsPadding' ekledim, bu sayede alt butonlara çarpmaz
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
@@ -86,7 +86,9 @@ class MainActivity : ComponentActivity() {
                                                 backStack.add(NavKey.Favorites) 
                                             },
                                             isDarkMode = isDarkMode,
-                                            onToggleDarkMode = { isDarkMode = !isDarkMode }
+                                            onToggleDarkMode = { isDarkMode = !isDarkMode },
+                                            isTurkish = isTurkish, // Dil bilgisini gönderiyoruz
+                                            onToggleLanguage = { isTurkish = !isTurkish } // Dili değiştirme fonksiyonu
                                         )
                                     }
                                     is NavKey.MovieDetail -> NavEntry(key) {
@@ -110,7 +112,8 @@ class MainActivity : ComponentActivity() {
                                             onMovieClick = { movie -> 
                                                 backStack.add(NavKey.MovieDetail(movie)) 
                                             },
-                                            onBack = { backStack.removeAt(backStack.size - 1) }
+                                            onBack = { backStack.removeAt(backStack.size - 1) },
+                                            isTurkish = isTurkish // Dil bilgisini gönderiyoruz
                                         )
                                     }
                                     is NavKey.Favorites -> NavEntry(key) {

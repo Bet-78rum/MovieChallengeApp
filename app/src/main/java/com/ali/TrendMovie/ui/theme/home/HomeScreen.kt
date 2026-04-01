@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Language
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,7 +38,9 @@ fun HomeScreen(
     onHomeClick: () -> Unit,
     onFavoritesClick: () -> Unit,
     isDarkMode: Boolean,
-    onToggleDarkMode: () -> Unit
+    onToggleDarkMode: () -> Unit,
+    isTurkish: Boolean, // Yeni: Dil durumu
+    onToggleLanguage: () -> Unit // Yeni: Dil değiştirme fonksiyonu
 ) {
     val context = LocalContext.current
     var isConnected by remember { mutableStateOf(true) }
@@ -57,13 +60,16 @@ fun HomeScreen(
     var searchQuery by remember { mutableStateOf("") }
     var isSearching by remember { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) {
+    // Dil değiştiğinde verileri tekrar çekmek için 'isTurkish' bağımlılığını ekledik
+    LaunchedEffect(isTurkish) {
         try {
             val apiKey = "3718ca57be56d9dae8c1ec94fde249db"
-            nowPlaying.value = RetrofitInstance.api.getNowPlayingMovies(apiKey).results
-            popular.value = RetrofitInstance.api.getPopularMovies(apiKey).results
-            topRated.value = RetrofitInstance.api.getTopRatedMovies(apiKey).results
-            upcoming.value = RetrofitInstance.api.getUpcomingMovies(apiKey).results
+            val lang = if (isTurkish) "tr-TR" else "en-US"
+            
+            nowPlaying.value = RetrofitInstance.api.getNowPlayingMovies(apiKey, lang).results
+            popular.value = RetrofitInstance.api.getPopularMovies(apiKey, lang).results
+            topRated.value = RetrofitInstance.api.getTopRatedMovies(apiKey, lang).results
+            upcoming.value = RetrofitInstance.api.getUpcomingMovies(apiKey, lang).results
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -77,22 +83,30 @@ fun HomeScreen(
                         TextField(
                             value = searchQuery,
                             onValueChange = { searchQuery = it },
-                            placeholder = { Text("Search Movie...") },
+                            placeholder = { Text(if (isTurkish) "Film Ara..." else "Search Movie...") },
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth()
                         )
                     } else {
-                        Text("Trend Movie")
+                        Text(if (isTurkish) "Trend Film" else "Trend Movie")
                     }
                 },
                 actions = {
+                    // Dil Değiştirme Butonu (Dünya ikonu)
+                    IconButton(onClick = onToggleLanguage) {
+                        Icon(
+                            imageVector = Icons.Filled.Language, 
+                            contentDescription = "Language",
+                            tint = if (isTurkish) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                    
                     IconButton(onClick = { isSearching = !isSearching }) {
                         Icon(Icons.Filled.Search, contentDescription = "Search")
                     }
                     IconButton(onClick = onFavoritesClick) {
                         Icon(Icons.Filled.Favorite, contentDescription = "Favorites", tint = MaterialTheme.colorScheme.primary)
                     }
-                    // Ev simgesi kaldırıldı
                     Switch(
                         checked = isDarkMode,
                         onCheckedChange = { onToggleDarkMode() },
@@ -107,25 +121,25 @@ fun HomeScreen(
             LazyColumn {
                 item {
                     CategorySection(
-                        title = "Now Playing",
+                        title = if (isTurkish) "Şu An Oynatılanlar" else "Now Playing",
                         movies = nowPlaying.value.filter { it.title.contains(searchQuery, true) },
                         onMovieClick = onMovieClick,
                         onShowAllClick = { onShowAllClick("now_playing") }
                     )
                     CategorySection(
-                        title = "Popular",
+                        title = if (isTurkish) "Popüler" else "Popular",
                         movies = popular.value.filter { it.title.contains(searchQuery, true) },
                         onMovieClick = onMovieClick,
                         onShowAllClick = { onShowAllClick("popular") }
                     )
                     CategorySection(
-                        title = "Most Voted",
+                        title = if (isTurkish) "En Çok Oylananlar" else "Most Voted",
                         movies = topRated.value.filter { it.title.contains(searchQuery, true) },
                         onMovieClick = onMovieClick,
                         onShowAllClick = { onShowAllClick("top_rated") }
                     )
                     CategorySection(
-                        title = "Soon",
+                        title = if (isTurkish) "Yakında" else "Upcoming",
                         movies = upcoming.value.filter { it.title.contains(searchQuery, true) },
                         onMovieClick = onMovieClick,
                         onShowAllClick = { onShowAllClick("upcoming") }

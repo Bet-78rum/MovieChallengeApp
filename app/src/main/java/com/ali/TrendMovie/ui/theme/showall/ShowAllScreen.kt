@@ -41,7 +41,12 @@ import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShowAllScreen(category: String, onMovieClick: (Movie) -> Unit, onBack: () -> Unit) {
+fun ShowAllScreen(
+    category: String, 
+    onMovieClick: (Movie) -> Unit, 
+    onBack: () -> Unit,
+    isTurkish: Boolean // Yeni eklendi
+) {
     val context = LocalContext.current
     var isConnected by remember { mutableStateOf(true) }
 
@@ -55,13 +60,14 @@ fun ShowAllScreen(category: String, onMovieClick: (Movie) -> Unit, onBack: () ->
     val movies = remember { mutableStateOf<List<Movie>>(emptyList()) }
     val apiKey = "3718ca57be56d9dae8c1ec94fde249db"
 
-    LaunchedEffect(category) {
+    LaunchedEffect(category, isTurkish) {
         try {
+            val lang = if (isTurkish) "tr-TR" else "en-US"
             val response = when (category) {
-                "now_playing" -> RetrofitInstance.api.getNowPlayingMovies(apiKey)
-                "popular" -> RetrofitInstance.api.getPopularMovies(apiKey)
-                "top_rated" -> RetrofitInstance.api.getTopRatedMovies(apiKey)
-                "upcoming" -> RetrofitInstance.api.getUpcomingMovies(apiKey)
+                "now_playing" -> RetrofitInstance.api.getNowPlayingMovies(apiKey, lang)
+                "popular" -> RetrofitInstance.api.getPopularMovies(apiKey, lang)
+                "top_rated" -> RetrofitInstance.api.getTopRatedMovies(apiKey, lang)
+                "upcoming" -> RetrofitInstance.api.getUpcomingMovies(apiKey, lang)
                 else -> null
             }
             movies.value = response?.results ?: emptyList()
@@ -74,16 +80,15 @@ fun ShowAllScreen(category: String, onMovieClick: (Movie) -> Unit, onBack: () ->
                 title = {
                     Text(
                         text = when(category) {
-                            "now_playing" -> "Those in the vision"
-                            "popular" -> "Popular"
-                            "top_rated" -> "Most Voted"
-                            "upcoming" -> "Soon"
+                            "now_playing" -> if (isTurkish) "Vizyondakiler" else "Now Playing"
+                            "popular" -> if (isTurkish) "Popüler" else "Popular"
+                            "top_rated" -> if (isTurkish) "En Çok Oylananlar" else "Most Voted"
+                            "upcoming" -> if (isTurkish) "Yakında" else "Upcoming"
                             else -> category.replace("_", " ").uppercase()
                         }
                     )
                 },
                 navigationIcon = {
-                    // "Back" butonu yerine Geri Oku (Back Arrow) ikonu
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -125,7 +130,7 @@ fun ShowAllScreen(category: String, onMovieClick: (Movie) -> Unit, onBack: () ->
                                 maxLines = 1
                             )
                             Text(
-                                text = "Score: ⭐ ${movie.vote_average}",
+                                text = if (isTurkish) "Puan: ⭐ ${movie.vote_average}" else "Score: ⭐ ${movie.vote_average}",
                                 style = MaterialTheme.typography.bodySmall
                             )
                         }

@@ -1,7 +1,9 @@
 package com.ali.TrendMovie
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -23,13 +25,22 @@ fun MovieDetailScreen(
     onToggleFavorite: () -> Unit,
     onClose: () -> Unit
 ) {
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+    // Sayfanın alt tuşlara çok yaklaşmaması için 'navigationBarsPadding' ekledik
+    // Ayrıca uzun özetler için 'verticalScroll' ekledim
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp)
+            .navigationBarsPadding() 
+            .verticalScroll(rememberScrollState())
+    ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // "Close" yazısı yerine Geri Oku (Back Arrow) ikonu
             IconButton(onClick = onClose) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -37,7 +48,6 @@ fun MovieDetailScreen(
                 )
             }
 
-            // Kalp (Favori) butonu
             IconButton(onClick = onToggleFavorite) {
                 Icon(
                     imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
@@ -47,12 +57,13 @@ fun MovieDetailScreen(
             }
         }
         
+        // Resim yüksekliğini 2 kademe (450 -> 380) azalttım
         AsyncImage(
             model = "https://image.tmdb.org/t/p/original${movie.poster_path}",
             contentDescription = movie.title,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(450.dp)
+                .height(380.dp) 
                 .clip(RoundedCornerShape(24.dp)),
             contentScale = ContentScale.Crop
         )
@@ -62,5 +73,8 @@ fun MovieDetailScreen(
         Text(text = "Score: ⭐ ${movie.vote_average}", style = MaterialTheme.typography.titleMedium)
         Spacer(modifier = Modifier.height(8.dp))
         Text(text = movie.overview, style = MaterialTheme.typography.bodyLarge)
+        
+        // En alta fazladan boşluk ekleyerek içeriği yukarıda tutuyoruz
+        Spacer(modifier = Modifier.height(32.dp))
     }
 }

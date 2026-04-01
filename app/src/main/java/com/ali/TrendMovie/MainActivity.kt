@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -19,9 +20,7 @@ import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
 import com.ali.TrendMovie.model.Movie
 
-// Ekranların importları - Eğer hata alırsan bu yolları kontrol etmelisin
-// Not: Tüm dosyaların 'package com.ali.TrendMovie' olarak tanımlandığını varsayıyorum.
-
+// Ekranların importları
 import com.ali.TrendMovie.ui.theme.TrendMovieTheme
 
 // Navigation 3 için anahtar (route) tanımları
@@ -44,10 +43,15 @@ class MainActivity : ComponentActivity() {
             TrendMovieTheme(darkTheme = isDarkMode) {
                 Surface(color = MaterialTheme.colorScheme.background) {
                     
-                    // Navigation 3 Back Stack (Liste tabanlı)
                     val backStack = remember { mutableStateListOf<NavKey>(NavKey.Greeting) }
 
-                    Box(modifier = Modifier.fillMaxSize().statusBarsPadding()) {
+                    // Box içine 'navigationBarsPadding' ekledim, bu sayede alt butonlara çarpmaz
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .statusBarsPadding()
+                            .navigationBarsPadding() 
+                    ) {
                         NavDisplay(
                             backStack = backStack,
                             onBack = { 
